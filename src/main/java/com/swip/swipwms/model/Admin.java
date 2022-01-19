@@ -1,10 +1,10 @@
-package data;
+package com.swip.swipwms.model;
 
-import intro.TheWarehouseManager;
+import com.swip.swipwms.intro.TheWarehouseManager;
 
 import java.util.ArrayList;
 
-import static intro.TheWarehouseApp.SESSION_ACTIONS;
+import static com.swip.swipwms.intro.TheWarehouseApp.SESSION_ACTIONS;
 
 public class Admin extends User{
 

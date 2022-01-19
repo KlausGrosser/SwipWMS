@@ -1,13 +1,16 @@
-package data;
+package com.swip.swipwms.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-import intro.TheWarehouseApp;
-import intro.TheWarehouseManager;
+import com.swip.swipwms.model.Order;
+import com.swip.swipwms.repository.OrderRepository;
+import com.swip.swipwms.repository.UserRepository;
+import com.swip.swipwms.repository.WarehouseRepository;
+import com.swip.swipwms.intro.TheWarehouseApp;
+import com.swip.swipwms.intro.TheWarehouseManager;
 
-import static intro.TheWarehouseApp.SESSION_ACTIONS;
+import static com.swip.swipwms.intro.TheWarehouseApp.SESSION_ACTIONS;
 
 public class AdminServiceImpl implements AdminService{
 

@@ -1,4 +1,4 @@
-package data;
+package com.swip.swipwms.repository;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.swip.swipwms.model.Item;
+import com.swip.swipwms.model.Warehouse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -33,7 +35,7 @@ public class WarehouseRepository {
             //ITEM_LIST.clear();
             WAREHOUSE_LIST.clear();
 
-            reader = new BufferedReader(new FileReader("src/main/java/resources/stock.json"));
+            reader = new BufferedReader(new FileReader("src/main/resources/stock.json"));
             Object data = JSONValue.parse(reader);
             if (data instanceof JSONArray) {
                 JSONArray dataArray = (JSONArray) data;

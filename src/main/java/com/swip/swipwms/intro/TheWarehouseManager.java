@@ -1,12 +1,12 @@
-package intro;
+package com.swip.swipwms.intro;
 
 
-import data.*;
+import com.swip.swipwms.model.*;
+import com.swip.swipwms.repository.UserRepository;
+import com.swip.swipwms.repository.WarehouseRepository;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-
-import static intro.TheWarehouseApp.SESSION_ACTIONS;
 
 /**
  * Provides necessary methods to deal through the Warehouse management actions
@@ -166,7 +166,7 @@ public class TheWarehouseManager extends WarehouseRepository {
             System.out.println("====================================\n====================================\n");
         }
         printNumberOfItemsByWarehouse();
-        SESSION_ACTIONS.add("Listed "+getTotalListedItems(WarehouseRepository.getAllItems())+" items.");
+        TheWarehouseApp.SESSION_ACTIONS.add("Listed "+getTotalListedItems(WarehouseRepository.getAllItems())+" items.");
     }
 
     private int getTotalListedItems(List<Item> masterList){
@@ -199,7 +199,7 @@ public class TheWarehouseManager extends WarehouseRepository {
             printLocations(itemName.toLowerCase());
             if (getAvailableAmount(itemName.toLowerCase()) > 0) {
                 printMaximumAvailability(itemName.toLowerCase());
-                SESSION_ACTIONS.add("Searched "+getAppropriateIndefiniteArticle(formattedItem(itemName))+ formattedItem(itemName)+".");
+                TheWarehouseApp.SESSION_ACTIONS.add("Searched "+getAppropriateIndefiniteArticle(formattedItem(itemName))+ formattedItem(itemName)+".");
                 askAmountAndConfirmOrder(getAvailableAmount(itemName.toLowerCase()), itemName);
             }
         }
@@ -318,12 +318,12 @@ public class TheWarehouseManager extends WarehouseRepository {
                 }else{
                     TheWarehouseApp.SESSION_USER.order(formattedItem(item),orderAmount);
                     if(orderAmount == 1){
-                        SESSION_ACTIONS.add("Ordered "+orderAmount+" "+formattedItem(item)+".");
+                        TheWarehouseApp.SESSION_ACTIONS.add("Ordered "+orderAmount+" "+formattedItem(item)+".");
                     }else {
                         if (checkPluralName(item.toLowerCase())) {
-                            SESSION_ACTIONS.add("Ordered " + orderAmount + " " + formattedItem(item) + this.checkPluralOrder(item)+".");
+                            TheWarehouseApp.SESSION_ACTIONS.add("Ordered " + orderAmount + " " + formattedItem(item) + this.checkPluralOrder(item)+".");
                         } else {
-                            SESSION_ACTIONS.add("Ordered " + orderAmount + " " + formattedItem(item) + this.checkPluralOrder(item)+".");
+                            TheWarehouseApp.SESSION_ACTIONS.add("Ordered " + orderAmount + " " + formattedItem(item) + this.checkPluralOrder(item)+".");
                         }
                     }
                 }
@@ -400,7 +400,7 @@ public class TheWarehouseManager extends WarehouseRepository {
         int choice = chooseCategory();
         printCategoryItems(choice, menu);
 
-        SESSION_ACTIONS.add("Browsed the category "+menu.get(choice));
+        TheWarehouseApp.SESSION_ACTIONS.add("Browsed the category "+menu.get(choice));
     }
 
     private int amountOfItemsPerCategory(String category){

@@ -1,4 +1,4 @@
-package data;
+package com.swip.swipwms.model;
 
 import java.util.Date;
 

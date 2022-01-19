@@ -1,6 +1,5 @@
-package data;
+package com.swip.swipwms.model;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 

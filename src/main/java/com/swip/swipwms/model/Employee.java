@@ -1,13 +1,11 @@
-package data;
+package com.swip.swipwms.model;
 
-import intro.TheWarehouseApp;
-import intro.TheWarehouseManager;
+import com.swip.swipwms.intro.TheWarehouseApp;
+import com.swip.swipwms.intro.TheWarehouseManager;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static intro.TheWarehouseApp.IS_EMPLOYEE;
-import static intro.TheWarehouseApp.SESSION_ACTIONS;
+import static com.swip.swipwms.intro.TheWarehouseApp.SESSION_ACTIONS;
 
 public class Employee extends User{
 

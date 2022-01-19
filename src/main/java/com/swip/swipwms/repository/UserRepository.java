@@ -1,5 +1,6 @@
-package data;
+package com.swip.swipwms.repository;
 
+import com.swip.swipwms.model.Employee;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -7,11 +8,8 @@ import org.json.simple.JSONValue;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * The Data Repository
@@ -36,7 +34,7 @@ public class UserRepository {
         try {
             EMPLOYEE_LIST.clear();
 
-            reader = new BufferedReader(new FileReader("src/main/java/resources/personnel.json"));
+            reader = new BufferedReader(new FileReader("src/main/resources/personnel.json"));
             Object data = JSONValue.parse(reader);
             if (data instanceof JSONArray) {
                 JSONArray dataArray = (JSONArray) data;

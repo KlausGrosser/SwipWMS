@@ -1,9 +1,12 @@
-package intro;
+package com.swip.swipwms.intro;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import data.*;
+import com.swip.swipwms.model.Guest;
+import com.swip.swipwms.model.User;
+import com.swip.swipwms.repository.UserRepository;
+import com.swip.swipwms.service.*;
 
 public class TheWarehouseApp {
 
