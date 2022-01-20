@@ -1,0 +1,28 @@
+<div>
+    <h2>Welcome to Swip Warehouse Mangement System</h2>
+
+    <p><a href="/">Home Page</a></p>
+
+    <h3>All Categories List  <span th:text="'(Count: ' + ${itemCount} + ')'"></span></h3>
+
+    <div th:each="category : ${category}" >
+        <a th:text="'List items from category ' + ${category}" th:href="'/getItemsByCategory/' + ${category}"></a>
+    </div>
+
+
+
+    <table>
+        <tbody>
+        <tr th:each="item : ${items}">
+            <td th:text="${item.state}"></td>
+            <td th:text="${item.category}"></td>
+            <td th:text="${item.dateOfStock}"></td>
+            <td th:text="${item.warehouse}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+
+</div>

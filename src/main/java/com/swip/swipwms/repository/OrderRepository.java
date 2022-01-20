@@ -35,7 +35,7 @@ public class OrderRepository {
         try {
             ORDER_LIST.clear();
 
-            reader = new BufferedReader(new FileReader("src/main/resources/order.json"));
+            reader = new BufferedReader(new FileReader("data/order.json"));
             Object data = JSONValue.parse(reader);
             if (data instanceof JSONArray) {
                 JSONArray dataArray = (JSONArray) data;

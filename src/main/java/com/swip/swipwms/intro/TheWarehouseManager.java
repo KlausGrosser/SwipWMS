@@ -47,12 +47,11 @@ public class TheWarehouseManager extends WarehouseRepository {
      * Ask for user's choice of action
      */
     public int getUsersChoice() {
-        int choice = 0;
         System.out.println();
         for (String option : this.userOptions) {
             System.out.println(option);
         }
-        return this.promptIntChoice("Type the number of the operation: ", choice, this.userOptions.length, "Type the number of the operation: ");
+        return this.promptIntChoice("Type the number of the operation: ", this.userOptions.length);
     }
 
     /**
@@ -103,6 +102,23 @@ public class TheWarehouseManager extends WarehouseRepository {
         System.exit(0);
     }
 
+    public int promptIntChoice(String prompt, int numOfOptions){
+        int choice = 0;
+        System.out.print(prompt);
+        String input;
+        do {
+            input = reader.nextLine();
+            if(input.isBlank()){
+                reader = new Scanner(System.in);
+            }
+            if(input.matches("[0-9]+[\\.]?[0-9]*")){
+                choice = Integer.parseInt(input);
+            }
+            this.printErrorMessage(choice, input, numOfOptions, prompt);
+        } while (choice < 1 || choice > numOfOptions || !input.matches("[0-9]+[\\.]?[0-9]*"));
+        return choice;
+    }
+
     // =====================================================================================
     // Private Methods
     // =====================================================================================
@@ -113,12 +129,12 @@ public class TheWarehouseManager extends WarehouseRepository {
     private void printErrorMessage(int choice, String input, int numOfOptions, String newPrompt){
         if (choice < 1 || choice > this.userOptions.length || !input.matches("[0-9]+[\\.]?[0-9]*")) {
             if(input.isBlank()){
-                System.out.println("\n**************************************************\n" +
+                System.out.println("**************************************************\n" +
                         "No option selected. Please enter a number between 1 and " + numOfOptions +"!\n" +
                         "**************************************************");
                 System.out.print(newPrompt);
             }else {
-                System.out.println("\n**************************************************\n" +
+                System.out.println("**************************************************\n" +
                         "\"" + input + "\" is not a valid operation. Please enter a number between 1 and " + numOfOptions + "!\n" +
                         "**************************************************");
                 System.out.print(newPrompt);
@@ -130,7 +146,7 @@ public class TheWarehouseManager extends WarehouseRepository {
      */
     private String seekUserName() {
         System.out.print("Enter your username: ");
-        String userName = reader.nextLine();
+        String userName = reader.nextLine().replaceAll("\\s", "");
         if(UserRepository.isUserEmployee(userName)) {
             TheWarehouseApp.SESSION_USER = new Employee();
             TheWarehouseApp.SESSION_USER.setName(userName);
@@ -410,7 +426,7 @@ public class TheWarehouseManager extends WarehouseRepository {
     private Map<Integer, String> createCategoryMenu(){
         Map<Integer, String> result = new LinkedHashMap<>();
         int count = 1;
-        Set<String> sortedSet = new TreeSet<>(getCategories());
+        Set<String> sortedSet = getCategories();
         for(String category: sortedSet){
             result.put(count, category);
             count++;
@@ -425,24 +441,7 @@ public class TheWarehouseManager extends WarehouseRepository {
     }
 
     private int chooseCategory(){
-        int choice = 0;
-        return this.promptIntChoice("Type the number of the category to browse: ", choice, getCategories().size(), "Type the number of the category to browse: ");
-    }
-
-    private int promptIntChoice(String prompt, int choice, int numOfOptions, String newPrompt){
-        System.out.print(prompt);
-        String input;
-        do {
-            input = reader.nextLine();
-            if(input.isBlank()){
-                reader = new Scanner(System.in);
-            }
-            if(input.matches("[0-9]+[\\.]?[0-9]*")){
-                choice = Integer.parseInt(input);
-            }
-            this.printErrorMessage(choice, input, numOfOptions, newPrompt);
-        } while (choice < 1 || choice > numOfOptions || !input.matches("[0-9]+[\\.]?[0-9]*"));
-        return choice;
+        return this.promptIntChoice("Type the number of the category to browse: ", getCategories().size());
     }
 
     private void printCategoryItems(int choice, Map<Integer, String> menu){

@@ -35,7 +35,7 @@ public class WarehouseRepository {
             //ITEM_LIST.clear();
             WAREHOUSE_LIST.clear();
 
-            reader = new BufferedReader(new FileReader("src/main/resources/stock.json"));
+            reader = new BufferedReader(new FileReader("data/stock.json"));
             Object data = JSONValue.parse(reader);
             if (data instanceof JSONArray) {
                 JSONArray dataArray = (JSONArray) data;
@@ -96,8 +96,21 @@ public class WarehouseRepository {
             for(Item item : WAREHOUSE_LIST.get(i).getStock()) {
                 item.setWarehouse(WAREHOUSE_LIST.get(i).getId());
                 itemsWarehouse.add(item);
+                itemsWarehouse.sort(new Comparator<Item>() {
+                    @Override
+                    public int compare(Item item1, Item item2) {
+                        return item1.compareTo(item2);
+                    }
+                });
+                itemsWarehouse.sort(new Comparator<Item>() {
+                    @Override
+                    public int compare(Item item1, Item item2) {
+                        return item1.getCategory().compareTo(item2.getCategory());
+                    }
+                });
             }
             allItems.addAll(itemsWarehouse);
+
         }
         return allItems;
     }
@@ -150,7 +163,7 @@ public class WarehouseRepository {
      * @return
      */
     public static Set<String> getCategories() {
-        Set<String> categories = new HashSet<String>();
+        Set<String> categories = new TreeSet<String>();
         for (Item item : getAllItems()) {
             categories.add(item.getCategory());
         }
