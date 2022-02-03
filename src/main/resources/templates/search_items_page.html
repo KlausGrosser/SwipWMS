@@ -40,7 +40,8 @@
             <td th:text="${item.category}"></td>
             <td th:text="${item.dateOfStock}"></td>
             <td th:text="${item.warehouse}"></td>
-            <td sec:authorize="isAuthenticated()"><a th:href="@{/orderPage/(state=${item.state},category=${item.category})}" class="link_menu">Order</a></td>
+<!--            <td sec:authorize="isAuthenticated()"><a th:href="@{/orderPage/(state=${item.state},category=${item.category})}" class="link_menu">Order</a></td>-->
+            <td><a th:href="@{/orderPage/(state=${item.state},category=${item.category})}" class="link_menu">Order</a></td>
         </tr>
         </tbody>
     </table>
