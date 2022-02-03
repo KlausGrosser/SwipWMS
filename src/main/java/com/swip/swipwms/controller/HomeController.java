@@ -1,13 +1,17 @@
 package com.swip.swipwms.controller;
 
 import com.swip.swipwms.model.Item;
-import org.springframework.boot.context.properties.bind.DefaultValue;
+import com.swip.swipwms.model.OrderItem;
+import com.swip.swipwms.service.WarehouseService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -15,16 +19,22 @@ import java.util.Set;
 public class HomeController {
 
     RestTemplate restTemplate;
+    WarehouseService warehouseService;
 
-    @GetMapping("/loginPage")
-    public String login(@RequestParam(value = "loginFailed", defaultValue = "false") Boolean loginFailed, Model model) {
-        model.addAttribute("loginFailed", loginFailed);
-        return "login.html";
+    @Autowired
+    public HomeController(WarehouseService warehouseService) {
+        this.warehouseService = warehouseService;
     }
 
     @GetMapping("/")
     public String getIndex() {
         return "index.html";
+    }
+
+    @RequestMapping("/loginPage")
+    public String login(@RequestParam(value = "loginFailed", defaultValue = "false") Boolean loginFailed, Model model) {
+        model.addAttribute("loginFailed", loginFailed);
+        return "login.html";
     }
 
     @GetMapping("/listAllItems")
@@ -59,7 +69,6 @@ public class HomeController {
                 List.class
         );
 
-
         model.addAttribute("warehouse", warehouseId);
         model.addAttribute("items", response);
         model.addAttribute("itemCount", response.size());
@@ -77,12 +86,6 @@ public class HomeController {
                 List.class
         );
 
-        Set<Integer> warehouseResponse = restTemplate.getForObject(
-                warehouseResourceUrl,
-                Set.class
-        );
-
-        model.addAttribute("warehouses", warehouseResponse);
         model.addAttribute("category", response);
         model.addAttribute("itemCount", response.size());
         return "browse_by_category.html";
@@ -104,12 +107,13 @@ public class HomeController {
         return "browse_by_specific_category.html";
     }
 
-    @GetMapping("/searchItemPage")
-    public String getSearchItemPage(HttpServletRequest request, Model model, @RequestParam(name = "keyword", required = false) String keyword) {
-        restTemplate = new RestTemplate();
-        String itemResourceUrl = null;
+    @RequestMapping(value = "/searchItemPage", method = RequestMethod.GET)
+    public String getSearchItemPage(HttpServletRequest request, Model model, @RequestParam(value = "keyword", defaultValue = "") String keyword) {
 
-        if(keyword != null){
+            restTemplate = new RestTemplate();
+            String itemResourceUrl = null;
+
+        if(!keyword.isBlank()){
             itemResourceUrl = "http://localhost:" + request.getLocalPort() + "/warehouse/searchItem/" + keyword;
         }else{
             itemResourceUrl = "http://localhost:" + request.getLocalPort() + "/warehouse/getAllItems/";
@@ -123,51 +127,43 @@ public class HomeController {
         model.addAttribute("items", response);
         model.addAttribute("itemCount", response.size());
 
+
         return "search_items_page.html";
     }
+
+
 
     @GetMapping("/orderPage")
-    public String getOrderPage(HttpServletRequest request, Model model, @RequestParam(name = "keyword", required = false) String keyword) {
-        restTemplate = new RestTemplate();
-        String itemResourceUrl = null;
+    public String getOrderPage(Model model, @RequestParam(value = "state") String state, @RequestParam(value = "category") String category) {
+        String itemName = state + " " + category;
 
-        if(keyword != null){
-            itemResourceUrl = "http://localhost:" + request.getLocalPort() + "/warehouse/searchItem/" + keyword;
-        }else{
-            itemResourceUrl = "http://localhost:" + request.getLocalPort() + "/warehouse/getAllItems/";
-        }
+        List<Item> availableItems = warehouseService.findItems(itemName);
 
-        List<Item> response = restTemplate.getForObject(
-                itemResourceUrl,
-                List.class
-        );
+        model.addAttribute("availableItems", availableItems);
+        model.addAttribute("amount", availableItems.size());
+        model.addAttribute("orderItem", new OrderItem(itemName, 1));
 
-        model.addAttribute("items", response);
-        model.addAttribute("itemCount", response.size());
-
-        return "search_items_page.html";
+        return "order_item_page.html";
     }
 
-    @PostMapping("/postOrderPage")
-    public String postOrderPage(HttpServletRequest request, Model model, @RequestParam(name = "keyword", required = false) String keyword) {
-        restTemplate = new RestTemplate();
-        String itemResourceUrl = null;
-
-        if(keyword != null){
-            itemResourceUrl = "http://localhost:" + request.getLocalPort() + "/warehouse/searchItem/" + keyword;
-        }else{
-            itemResourceUrl = "http://localhost:" + request.getLocalPort() + "/warehouse/getAllItems/";
+    @PostMapping("/orderPage")
+    public String postOrderPage(@ModelAttribute("orderItem") @Valid OrderItem orderItem, HttpServletRequest request, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "order_item_page.html";
         }
+
+        restTemplate = new RestTemplate();
+
+        String itemResourceUrl = "http://localhost:" + request.getLocalPort() + "/warehouse/removeItems/" + orderItem.getItemName() + "/" + orderItem.getAmount();
 
         List<Item> response = restTemplate.getForObject(
                 itemResourceUrl,
                 List.class
         );
 
-        model.addAttribute("items", response);
-        model.addAttribute("itemCount", response.size());
-
-        return "post_order_item_page.html";
+        model.addAttribute("orderedItems", orderItem.getItemName());
+        model.addAttribute("amount", orderItem.getAmount());
+        return "post_order_item_page";
     }
 
 }

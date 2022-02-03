@@ -174,9 +174,18 @@ public class WarehouseRepository {
     }
 
     //Public methods:
+    public static List<Item> find(String searchWord){
+        List<Item> results = new ArrayList<>();
+        for (Item item : WarehouseRepository.getAllItems()){
+            if(item.toString().toLowerCase().contains(searchWord.toLowerCase())){
+                results.add(item);
+            }
+        }
+        return results;
+    }
 
     public static void removeItemFromList(String itemName, int amount) throws IOException, ParseException {
-        System.out.println("Updating stock...");
+        System.out.println("\nUpdating stock...");
 
         File file = new File("data/temp-stock.json");
         FileWriter fileWriter = new FileWriter(file, true);

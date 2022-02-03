@@ -1,10 +1,17 @@
 package com.swip.swipwms.model;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 public class OrderItem {
 
     //Fields:
     private String itemName;
+    @NotNull
+    @Min(1)
     private int amount;
+
+
 
     //Constructors:
     public OrderItem(){};

@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org/">
-
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-<style> table, td, th { border: 1px solid black; width: 800px; } </style>
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style> table, td, th { border: 1px solid black; width: 800px; } </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <title>Search an item</title>
+</head>
+<body>
 <div>
     <h2>Welcome to Swip Warehouse Mangement System</h2>
     <div sec:authorize="isAuthenticated()">
@@ -18,39 +16,35 @@
     </div>
 
     <p><a href="/">Home Page</a></p>
+    <p sec:authorize="!isAuthenticated()"><a href="/loginPage" class="link_menu">Sign In</a></p>
+    <p sec:authorize="isAuthenticated()"><a href="/logout" class="link_menu">Sign Out</a></p>
     <p><a href="/searchItemPage">List All Items</a></p>
+
     <form action="#" th:action="@{/searchItemPage}" method="get">
-        <p><input type="text" th:value="${keyword}" name = "keyword" placeholder = "Search Item" size = "50"/></p>
-        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset"/></p>
-    </form>
+        <p><input type="text" th:value="${search}" name = "keyword" placeholder = "Search Item" size = "50"/></p>
+        <p><input type="submit" value="Search" /> <input type="reset" value="Reset"/></p>
+
+
 
     <h3>Items found: <span th:text=" '(Count: ' + ${itemCount} + ')'"></span></h3>
-
-
-<!--    <div th:each="item : ${items}" >-->
-<!--        <a th:text="'List of found items ' + ${item}" th:href="'/searchItem/' + ${item}"></a>-->
-<!--    </div>-->
-
-<!--    <h3>Items List  <span th:text="'(Count: ' + ${itemCount} + ')'"></span></h3>-->
-
     <table>
-        <tbody>
         <tr>
             <th>STATE</th>
             <th>CATEGORY</th>
             <th>DATE OF STOCK</th>
             <th>WAREHOUSE</th>
         </tr>
+        <tbody>
         <tr th:each="item : ${items}">
             <td th:text="${item.state}"></td>
             <td th:text="${item.category}"></td>
             <td th:text="${item.dateOfStock}"></td>
             <td th:text="${item.warehouse}"></td>
+            <td sec:authorize="isAuthenticated()"><a th:href="@{/orderPage/(state=${item.state},category=${item.category})}" class="link_menu">Order</a></td>
         </tr>
         </tbody>
     </table>
-
-
+    </form>
 </div>
-
+</body>
 </html>

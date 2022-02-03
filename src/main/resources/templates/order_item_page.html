@@ -1,10 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style> table, td, th { border: 1px solid black; width: 800px; } </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <title>Order an item</title>
 </head>
 <body>
+<div>
+    <h2 class="head2">Welcome to Warehouse Management System</h2>
 
+    <p><a href="/" class="link_menu">Home Page</a></p>
+    <p><a href="/searchItemPage">New Order</a></p>
+    <h3>Amount Selection</h3>
+
+    <form th:action="@{/orderPage}" th:object="${orderItem}" method="post">
+        <label for="itemName" th:text="'Item to order'"/>
+        <input type="text" displayname="itemName" id="itemName" th:value="${orderItem.itemName}" th:field="${orderItem.itemName}" readonly/>
+        <br>
+        <label for="amount" th:text="'(Available amount: ' + ${amount} + ')'"/>
+        <input type="number" name="amount" id="amount" th:field="${orderItem.amount}" min="1" th:max="${amount}"/>
+        <input type="submit" value="Order"/>
+    </form>
+</div>
 </body>
 </html>

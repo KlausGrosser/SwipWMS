@@ -2,8 +2,10 @@ package com.swip.swipwms.service;
 
 import com.swip.swipwms.model.Item;
 import com.swip.swipwms.repository.WarehouseRepository;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -31,13 +33,13 @@ public class WarehouseService {
         return WarehouseRepository.getItemsByCategory(category);
     }
 
-    public List<Item> getSearchItems(String keyword) {
-        List<Item> results = new ArrayList<>();
-        for (Item item : WarehouseRepository.getAllItems()){
-            if(item.toString().toLowerCase().contains(keyword.toLowerCase())){
-                results.add(item);
-            }
-        }
-        return results;
+    public List<Item> findItems(String keyword) {
+        return WarehouseRepository.find(keyword);
     }
+
+    public void removeItemsFromRepositoryAfterOrder(String item, int orderAmount) throws IOException, ParseException {
+        System.out.printf("\nOrdered %d %s\n",orderAmount, item);
+        WarehouseRepository.removeItemFromList(item, orderAmount);
+    }
+
 }

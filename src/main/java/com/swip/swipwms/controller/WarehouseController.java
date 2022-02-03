@@ -2,9 +2,11 @@ package com.swip.swipwms.controller;
 
 import com.swip.swipwms.model.Item;
 import com.swip.swipwms.service.WarehouseService;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -46,7 +48,13 @@ public class WarehouseController {
 
     @GetMapping("/searchItem/{keyword}")
     public List<Item> getSearchItems(@PathVariable ("keyword") String keyword){
-        return warehouseService.getSearchItems(keyword);
+        return warehouseService.findItems(keyword);
+    }
+
+    @GetMapping("removeItems/{itemName}/{amount}")
+    public void removeItems(@PathVariable("itemName") String itemName,
+                            @PathVariable("amount") Integer amount) throws IOException, ParseException {
+        warehouseService.removeItemsFromRepositoryAfterOrder(itemName, amount);
     }
 
 
