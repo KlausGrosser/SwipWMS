@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -8,14 +9,20 @@
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-<div>
-  <h2>Welcome to Swip Warehouse Mangement System</h2>
-  <div>
-    <h4><a href="/listAllItems">List all items</a></h4>
-    <h4><a href="browseByCategory">Browse by category</a></h4>
-    <h4><a href="/searchItemPage">Search an item and place an order</a></h4>
+  <title>SWIP WMS</title>
+</head>
 
-  </div>
-  <p><a href="/loginPage">Sign In</a></p>
+<body>
+<h2 class="head2">Welcome to SWIP Warehouse Management System</h2>
+<div sec:authorize="isAuthenticated()">
+  <p>Logged in as <span sec:authentication="name">{name}</span></p>
 </div>
+<div>
+  <h4><a href="/listAllItems" class="link_menu">List all items</a></h4>
+  <h4><a href="/browseByCategory" class="link_menu">Browse by category</a></h4>
+  <h4><a href="/searchItemPage" class="link_menu">Search an item and place an order</a></h4>
+</div>
+<p sec:authorize="!isAuthenticated()"><a href="/loginPage" class="link_menu">Sign In</a></p>
+<p sec:authorize="isAuthenticated()"><a href="/logout" class="link_menu">Sign Out</a></p>
+</body>
 </html>

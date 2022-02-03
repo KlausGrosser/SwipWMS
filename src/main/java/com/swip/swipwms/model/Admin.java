@@ -1,6 +1,7 @@
 package com.swip.swipwms.model;
 
 import com.swip.swipwms.intro.TheWarehouseManager;
+import com.swip.swipwms.repository.WarehouseRepository;
 
 import java.util.ArrayList;
 
@@ -10,16 +11,16 @@ public class Admin extends User{
 
     //Fields:
     private String password;
-    private String role;
+    private Roles role;
     private ArrayList<Employee> headOf;
 
     //Constructor:
     public Admin() {}
 
-    public Admin(String name, String password, String role, ArrayList<Employee> headOf) {
+    public Admin(String name, String password) {
         this.name = name;
         this.password = password;
-        this.role = role;
+        this.role = Roles.ADMIN;
     }
 
     //Getters and Setters:
@@ -33,13 +34,23 @@ public class Admin extends User{
         this.password = password;
     }
 
-    public String getRole(){
+    public Roles getRole(){
         return this.role;
     }
 
     //Public methods:
     @Override
     public void order(String name, int amount) {
+        int count = amount;
+        do{
+            for(Item item : WarehouseRepository.getAllItems()){
+                if(item.toString().toLowerCase().equals(name.toLowerCase())){
+                    count--;
+                    WarehouseRepository.getAllItems().remove(item);
+                }
+            }
+        }while(count != 0);
+
         System.out.printf("\nOrdered %d %s%s", amount, name,(amount == 1 ? "" : TheWarehouseManager.checkPluralOrder(name.toLowerCase())));
     }
 

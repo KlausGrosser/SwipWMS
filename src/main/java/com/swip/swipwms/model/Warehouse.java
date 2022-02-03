@@ -49,7 +49,10 @@ public class Warehouse {
 
     public void addItem(Item item){
         STOCK.add(item);
+    }
 
+    public void removeItem(Item item){
+        STOCK.remove(item);
     }
 
     public List<Item> search(String searchTerm) throws ParseException {

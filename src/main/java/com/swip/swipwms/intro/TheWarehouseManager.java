@@ -2,9 +2,15 @@ package com.swip.swipwms.intro;
 
 
 import com.swip.swipwms.model.*;
+import com.swip.swipwms.repository.ActionsRepository;
 import com.swip.swipwms.repository.UserRepository;
 import com.swip.swipwms.repository.WarehouseRepository;
+import org.json.simple.parser.ParseException;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -57,7 +63,7 @@ public class TheWarehouseManager extends WarehouseRepository {
     /**
      * Initiate an action based on given option
      */
-    public void performAction(int option) {
+    public void performAction(int option) throws IOException, ParseException {
         switch (option) {
             case 1:
                 this.listItemsByWarehouse();
@@ -96,9 +102,9 @@ public class TheWarehouseManager extends WarehouseRepository {
     /**
      * End the application
      */
-    public void quit() {
+    public void quit() throws IOException {
         TheWarehouseApp.SESSION_USER.bye();
-
+        new FileOutputStream("/Users/klausgrosser/IdeaProjects/SwipWMS/data/session-stock.json").close();
         System.exit(0);
     }
 
@@ -176,13 +182,15 @@ public class TheWarehouseManager extends WarehouseRepository {
         }
     }
 
-    private void listItemsByWarehouse() {
+    private void listItemsByWarehouse() throws IOException {
         for (Warehouse warehouse : WarehouseRepository.WAREHOUSE_LIST) {
             System.out.println(warehouse.toString());
             System.out.println("====================================\n====================================\n");
         }
         printNumberOfItemsByWarehouse();
-        TheWarehouseApp.SESSION_ACTIONS.add("Listed "+getTotalListedItems(WarehouseRepository.getAllItems())+" items.");
+        String action = "Listed "+getTotalListedItems(WarehouseRepository.getAllItems())+ " items.";
+        ActionsRepository.addToLog(TheWarehouseApp.SESSION_USER, action);
+        TheWarehouseApp.SESSION_ACTIONS.add(action);
     }
 
     private int getTotalListedItems(List<Item> masterList){
@@ -193,7 +201,7 @@ public class TheWarehouseManager extends WarehouseRepository {
         return this.getAvailableAmount(itemName.toLowerCase()) > 0;
     }
 
-    private void searchItemAndPlaceOrder() {
+    private void searchItemAndPlaceOrder() throws IOException, ParseException {
         String itemName;
         boolean found;
         do{
@@ -215,7 +223,9 @@ public class TheWarehouseManager extends WarehouseRepository {
             printLocations(itemName.toLowerCase());
             if (getAvailableAmount(itemName.toLowerCase()) > 0) {
                 printMaximumAvailability(itemName.toLowerCase());
-                TheWarehouseApp.SESSION_ACTIONS.add("Searched "+getAppropriateIndefiniteArticle(formattedItem(itemName))+ formattedItem(itemName)+".");
+                String action = "Searched "+getAppropriateIndefiniteArticle(formattedItem(itemName))+ formattedItem(itemName)+".";
+                ActionsRepository.addToLog(TheWarehouseApp.SESSION_USER, action);
+                TheWarehouseApp.SESSION_ACTIONS.add(action);
                 askAmountAndConfirmOrder(getAvailableAmount(itemName.toLowerCase()), itemName);
             }
         }
@@ -323,7 +333,8 @@ public class TheWarehouseManager extends WarehouseRepository {
     /**
      * Ask order amount and confirm order
      */
-    private void askAmountAndConfirmOrder(int availableAmount, String item) {
+    private void askAmountAndConfirmOrder(int availableAmount, String item) throws IOException, ParseException {
+        String action;
         if(TheWarehouseApp.SESSION_USER.checkAuthenticated()) {
             System.out.println("\nYou are authorized to place orders.");
         boolean toOrder = this.confirm("\nWould you like to order this item? ");
@@ -333,13 +344,20 @@ public class TheWarehouseManager extends WarehouseRepository {
                     return;
                 }else{
                     TheWarehouseApp.SESSION_USER.order(formattedItem(item),orderAmount);
+                    WarehouseRepository.removeItemFromList(item, orderAmount);
                     if(orderAmount == 1){
-                        TheWarehouseApp.SESSION_ACTIONS.add("Ordered "+orderAmount+" "+formattedItem(item)+".");
+                        action = "Ordered "+orderAmount+" "+formattedItem(item)+".";
+                        ActionsRepository.addToLog(TheWarehouseApp.SESSION_USER, action);
+                        TheWarehouseApp.SESSION_ACTIONS.add(action);
                     }else {
                         if (checkPluralName(item.toLowerCase())) {
-                            TheWarehouseApp.SESSION_ACTIONS.add("Ordered " + orderAmount + " " + formattedItem(item) + this.checkPluralOrder(item)+".");
+                            action = "Ordered " + orderAmount + " " + formattedItem(item) + checkPluralOrder(item)+".";
+                            ActionsRepository.addToLog(TheWarehouseApp.SESSION_USER, action);
+                            TheWarehouseApp.SESSION_ACTIONS.add(action);
                         } else {
-                            TheWarehouseApp.SESSION_ACTIONS.add("Ordered " + orderAmount + " " + formattedItem(item) + this.checkPluralOrder(item)+".");
+                            action = "Ordered " + orderAmount + " " + formattedItem(item) + checkPluralOrder(item)+".";
+                            ActionsRepository.addToLog(TheWarehouseApp.SESSION_USER, action);
+                            TheWarehouseApp.SESSION_ACTIONS.add(action);
                         }
                     }
                 }
@@ -409,14 +427,16 @@ public class TheWarehouseManager extends WarehouseRepository {
         return orderAmount;
     }
 
-    private void browseByCategory() {
+    private void browseByCategory() throws IOException {
         Map<Integer, String> menu = createCategoryMenu();
         System.out.println("\nCategories: ");
         printCategoryMenu(menu);
         int choice = chooseCategory();
         printCategoryItems(choice, menu);
 
-        TheWarehouseApp.SESSION_ACTIONS.add("Browsed the category "+menu.get(choice));
+        String action = "Browsed the category "+ menu.get(choice) + ".";
+        ActionsRepository.addToLog(TheWarehouseApp.SESSION_USER, action);
+        TheWarehouseApp.SESSION_ACTIONS.add(action);
     }
 
     private int amountOfItemsPerCategory(String category){

@@ -1,10 +1,10 @@
 package com.swip.swipwms.controller;
 
 import com.swip.swipwms.model.Item;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +15,12 @@ import java.util.Set;
 public class HomeController {
 
     RestTemplate restTemplate;
+
+    @GetMapping("/loginPage")
+    public String login(@RequestParam(value = "loginFailed", defaultValue = "false") Boolean loginFailed, Model model) {
+        model.addAttribute("loginFailed", loginFailed);
+        return "login.html";
+    }
 
     @GetMapping("/")
     public String getIndex() {
@@ -82,8 +88,8 @@ public class HomeController {
         return "browse_by_category.html";
     }
 
-    @GetMapping("/getItemsByCategory/{category}")
-    public String getItemsByCategoryPage(HttpServletRequest request, Model model, @PathVariable("category") String category) {
+    @GetMapping("/browseByCategory/{category}")
+    public String getBrowseByCategoryPage(HttpServletRequest request, Model model, @PathVariable("category") String category) {
         restTemplate = new RestTemplate();
         String itemResourceUrl = "http://localhost:" + request.getLocalPort() + "/warehouse/getItemsByCategory/" + category;
 
@@ -92,11 +98,76 @@ public class HomeController {
                 List.class
         );
 
-
         model.addAttribute("category", category);
         model.addAttribute("items", response);
         model.addAttribute("itemCount", response.size());
         return "browse_by_specific_category.html";
+    }
+
+    @GetMapping("/searchItemPage")
+    public String getSearchItemPage(HttpServletRequest request, Model model, @RequestParam(name = "keyword", required = false) String keyword) {
+        restTemplate = new RestTemplate();
+        String itemResourceUrl = null;
+
+        if(keyword != null){
+            itemResourceUrl = "http://localhost:" + request.getLocalPort() + "/warehouse/searchItem/" + keyword;
+        }else{
+            itemResourceUrl = "http://localhost:" + request.getLocalPort() + "/warehouse/getAllItems/";
+        }
+
+        List<Item> response = restTemplate.getForObject(
+                itemResourceUrl,
+                List.class
+        );
+
+        model.addAttribute("items", response);
+        model.addAttribute("itemCount", response.size());
+
+        return "search_items_page.html";
+    }
+
+    @GetMapping("/orderPage")
+    public String getOrderPage(HttpServletRequest request, Model model, @RequestParam(name = "keyword", required = false) String keyword) {
+        restTemplate = new RestTemplate();
+        String itemResourceUrl = null;
+
+        if(keyword != null){
+            itemResourceUrl = "http://localhost:" + request.getLocalPort() + "/warehouse/searchItem/" + keyword;
+        }else{
+            itemResourceUrl = "http://localhost:" + request.getLocalPort() + "/warehouse/getAllItems/";
+        }
+
+        List<Item> response = restTemplate.getForObject(
+                itemResourceUrl,
+                List.class
+        );
+
+        model.addAttribute("items", response);
+        model.addAttribute("itemCount", response.size());
+
+        return "search_items_page.html";
+    }
+
+    @PostMapping("/postOrderPage")
+    public String postOrderPage(HttpServletRequest request, Model model, @RequestParam(name = "keyword", required = false) String keyword) {
+        restTemplate = new RestTemplate();
+        String itemResourceUrl = null;
+
+        if(keyword != null){
+            itemResourceUrl = "http://localhost:" + request.getLocalPort() + "/warehouse/searchItem/" + keyword;
+        }else{
+            itemResourceUrl = "http://localhost:" + request.getLocalPort() + "/warehouse/getAllItems/";
+        }
+
+        List<Item> response = restTemplate.getForObject(
+                itemResourceUrl,
+                List.class
+        );
+
+        model.addAttribute("items", response);
+        model.addAttribute("itemCount", response.size());
+
+        return "post_order_item_page.html";
     }
 
 }

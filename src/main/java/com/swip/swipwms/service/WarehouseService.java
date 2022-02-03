@@ -4,6 +4,7 @@ import com.swip.swipwms.model.Item;
 import com.swip.swipwms.repository.WarehouseRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,5 +29,15 @@ public class WarehouseService {
 
     public List<Item> getItemsByCategory(String category){
         return WarehouseRepository.getItemsByCategory(category);
+    }
+
+    public List<Item> getSearchItems(String keyword) {
+        List<Item> results = new ArrayList<>();
+        for (Item item : WarehouseRepository.getAllItems()){
+            if(item.toString().toLowerCase().contains(keyword.toLowerCase())){
+                results.add(item);
+            }
+        }
+        return results;
     }
 }

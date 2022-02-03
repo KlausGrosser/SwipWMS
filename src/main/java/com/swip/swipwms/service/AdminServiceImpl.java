@@ -1,9 +1,12 @@
 package com.swip.swipwms.service;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.swip.swipwms.model.Order;
+import com.swip.swipwms.repository.ActionsRepository;
 import com.swip.swipwms.repository.OrderRepository;
 import com.swip.swipwms.repository.UserRepository;
 import com.swip.swipwms.repository.WarehouseRepository;
@@ -46,7 +49,7 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public void performAction(int option) {
+    public void performAction(int option) throws IOException {
         switch (option) {
             case 1: // "1. List orders by warehouse"
                 this.listOrdersByWarehouse();
@@ -64,7 +67,7 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public void listOrdersByWarehouse() {
+    public void listOrdersByWarehouse() throws IOException {
         //get all orders using OrderRepository
         List<Order> orders = OrderRepository.getAllOrders();
 
@@ -82,11 +85,13 @@ public class AdminServiceImpl implements AdminService{
         // use the printsListOfOrdersToConsole method and pass the created list as argument.
         this.printsListOfOrdersToConsole(ordersByWarehouse);
         //Add the action detail string to the SESSION_ACTIONS in TheWarehouseApp. Eg: 'Listed Orders of warehouse ' + {warehouseId}
-        SESSION_ACTIONS.add("Listed Orders of warehouse "+id+".");
+        String action = "Listed Orders of warehouse "+id+".";
+        ActionsRepository.addToLog(TheWarehouseApp.SESSION_USER, action);
+        SESSION_ACTIONS.add(action);
     }
 
     @Override
-    public void listOrdersByStatus() {
+    public void listOrdersByStatus() throws IOException {
         // Keep asking for user's choice until a valid value is received
 
         System.out.println("List Orders by Status : ");
@@ -122,11 +127,13 @@ public class AdminServiceImpl implements AdminService{
         // use the printsListOfOrdersToConsole method and pass the created list as argument.
         this.printsListOfOrdersToConsole(orders);
         //Add the action detail string to the SESSION_ACTIONS in TheWarehouseApp. Eg: 'Listed Orders with status ' + {status}
-        SESSION_ACTIONS.add("Listed Orders with status: "+status+".");
+        String action = "Listed Orders with status: "+status+".";
+        ActionsRepository.addToLog(TheWarehouseApp.SESSION_USER, action);
+        SESSION_ACTIONS.add(action);
     }
 
     @Override
-    public void listOrdersWhoseTotalCostGreaterThan() {
+    public void listOrdersWhoseTotalCostGreaterThan() throws IOException {
         int value = this.getValue();
 
         //initialize an empty list of orders
@@ -140,7 +147,9 @@ public class AdminServiceImpl implements AdminService{
         // use the printsListOfOrdersToConsole method and pass the created list as argument.
         this.printsListOfOrdersToConsole(orders);
         //Add the action detail string to the SESSION_ACTIONS in TheWarehouseApp. Eg: 'Listed Orders with total cost greater than ' + {marginalValue}
-        SESSION_ACTIONS.add("Listed Orders above "+value+"€");
+        String action = "Listed Orders above "+value+"€";
+        ActionsRepository.addToLog(TheWarehouseApp.SESSION_USER, action);
+        SESSION_ACTIONS.add(action);
     }
 
     @Override

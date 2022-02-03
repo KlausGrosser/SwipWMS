@@ -1,5 +1,6 @@
 package com.swip.swipwms.model;
 
+import java.io.IOException;
 import java.util.List;
 
 public abstract class User {
@@ -42,7 +43,7 @@ public abstract class User {
         return (name.equals(this.name));
     }
 
-    public abstract void order(String item, int orderAmount);
+    public abstract void order(String item, int orderAmount) throws IOException;
 
     public void greet(){
         System.out.printf("Hello, %s!\n" +

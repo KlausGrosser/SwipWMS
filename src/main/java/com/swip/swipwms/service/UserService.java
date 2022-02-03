@@ -1,5 +1,6 @@
 package com.swip.swipwms.service;
 
+import com.swip.swipwms.model.Admin;
 import com.swip.swipwms.model.Employee;
 import com.swip.swipwms.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ public class UserService {
         return UserRepository.getAllEmployees();
     }
 
-    public List<Employee> getAllAdmins(){
+    public List<Admin> getAllAdmins(){
         return UserRepository.getAllAdmins();
     }
 

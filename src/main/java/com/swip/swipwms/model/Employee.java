@@ -2,8 +2,9 @@ package com.swip.swipwms.model;
 
 import com.swip.swipwms.intro.TheWarehouseApp;
 import com.swip.swipwms.intro.TheWarehouseManager;
+import com.swip.swipwms.repository.WarehouseRepository;
 
-import java.util.ArrayList;
+import java.io.IOException;
 
 import static com.swip.swipwms.intro.TheWarehouseApp.SESSION_ACTIONS;
 
@@ -11,8 +12,7 @@ public class Employee extends User{
 
     //Fields:
     private String password;
-    private String role;
-    private ArrayList<Employee> headOf;
+    private Roles role;
 
     //Constructors:
     public Employee() {}
@@ -20,12 +20,7 @@ public class Employee extends User{
     public Employee(String userName,String password){
         this.name = userName;
         this.password = password;
-    }
-    public Employee(String userName, String password, String role, ArrayList<Employee> headOf){
-        super.name = userName;
-        this.password = password;
-        this.headOf = headOf;
-        this.role = role;
+        this.role = Roles.EMPLOYEE;
     }
 
     //Getters and Setters:
@@ -37,7 +32,7 @@ public class Employee extends User{
         this.password = password;
     }
 
-    public String getRole(){
+    public Roles getRole(){
         return this.role;
     }
 
@@ -47,7 +42,7 @@ public class Employee extends User{
         return (password.equals(this.password));
     }
 
-    public void order(String name, int amount){
+    public void order(String name, int amount) throws IOException {
         System.out.printf("\nOrdered %d %s%s", amount, name,(amount == 1 ? "" : TheWarehouseManager.checkPluralOrder(name.toLowerCase())));
     }
 

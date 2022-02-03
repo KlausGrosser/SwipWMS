@@ -1,5 +1,6 @@
 package com.swip.swipwms.repository;
 
+import com.swip.swipwms.model.Admin;
 import com.swip.swipwms.model.Employee;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -20,9 +21,9 @@ import java.util.List;
 public class UserRepository {
 
     //Fields:
-    private static final List<Employee> EMPLOYEE_LIST = new ArrayList<Employee>();
+    private static final List<Employee> EMPLOYEE_LIST = new ArrayList<>();
 
-    private static final List<Employee> ADMIN_LIST = new ArrayList<Employee>();
+    private static final List<Admin> ADMIN_LIST = new ArrayList<>();
 
     //Static methods:
     /**
@@ -44,10 +45,12 @@ public class UserRepository {
                         String userName = jsonData.get("user_name").toString();
                         String password = jsonData.get("password").toString();
                         String role = jsonData.get("role").toString();
-                        Employee employee = new Employee(userName, password, role,null);
-                        if(employee.getRole().equals("ADMIN")){
-                            ADMIN_LIST.add(employee);
+
+                        if(role.equals("ADMIN")){
+                            Admin admin = new Admin(userName, password);
+                            ADMIN_LIST.add(admin);
                         }else {
+                            Employee employee = new Employee(userName, password);
                             EMPLOYEE_LIST.add(employee);
                         }
                     }
@@ -75,7 +78,7 @@ public class UserRepository {
         return EMPLOYEE_LIST;
     }
 
-    public static List<Employee> getAllAdmins() {
+    public static List<Admin> getAllAdmins() {
         return ADMIN_LIST;
     }
 
@@ -99,16 +102,16 @@ public class UserRepository {
     }
 
     public static boolean isUserAdmin(String name) {
-        for(Employee employee : getAllAdmins()) {
-            if(employee.getName().equals(name))return true;
+        for(Admin admin : getAllAdmins()) {
+            if(admin.getName().equals(name))return true;
         }
         return false;
     }
 
     public static boolean isAdminValid(String userName, String password) {
-        for(Employee employee : getAllAdmins()) {
+        for(Admin admin : getAllAdmins()) {
             if(isUserAdmin(userName)) {
-                if(password.equals(employee.getPassword())) {
+                if(password.equals(admin.getPassword())) {
                     return true;
                 }
             }

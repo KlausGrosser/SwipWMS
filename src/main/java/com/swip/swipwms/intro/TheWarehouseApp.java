@@ -1,5 +1,6 @@
 package com.swip.swipwms.intro;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import com.swip.swipwms.model.Guest;
 import com.swip.swipwms.model.User;
 import com.swip.swipwms.repository.UserRepository;
 import com.swip.swipwms.service.*;
+import org.json.simple.parser.ParseException;
 
 public class TheWarehouseApp {
 
@@ -21,7 +23,7 @@ public class TheWarehouseApp {
     public static User SESSION_USER = new Guest();
 
     //Main method:
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ParseException {
 
         TheWarehouseManager theManager = new TheWarehouseManager();
 

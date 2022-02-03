@@ -1,5 +1,6 @@
 package com.swip.swipwms.controller;
 
+import com.swip.swipwms.model.Admin;
 import com.swip.swipwms.model.Employee;
 import com.swip.swipwms.model.LoginDTO;
 import com.swip.swipwms.service.UserService;
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping("/getAllAdmins")
-    public List<Employee> getAllAdmins(){
+    public List<Admin> getAllAdmins(){
         return userService.getAllAdmins();
     }
 

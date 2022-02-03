@@ -19,6 +19,9 @@
 </style>
 <div>
     <h2>Welcome to Swip Warehouse Mangement System</h2>
+    <div sec:authorize="isAuthenticated()">
+        <p>Logged in as <span sec:authentication="name">{name}</span></p>
+    </div>
 
     <p><a href="/">Home Page</a></p> <p><a href="/listAllItems">List all items</a></p>
 

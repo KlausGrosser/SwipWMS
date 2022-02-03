@@ -44,5 +44,10 @@ public class WarehouseController {
         return warehouseService.getItemsByCategory(category);
     }
 
+    @GetMapping("/searchItem/{keyword}")
+    public List<Item> getSearchItems(@PathVariable ("keyword") String keyword){
+        return warehouseService.getSearchItems(keyword);
+    }
+
 
 }
